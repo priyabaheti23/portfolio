@@ -4,115 +4,731 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Priya Baheti — Product Portfolio</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond&family=Inter&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-body { font-family: 'Inter', sans-serif; margin:0; background:#fafaf8; }
-
-/* KEEPING YOUR STYLES SAME (trimmed for clarity) */
-.post-card { display:grid; grid-template-columns:1fr 1fr; margin:30px; border:1px solid #ddd; }
-.slide-img { width:100%; height:350px; object-fit:cover; }
-.slides-panel { position:relative; overflow:hidden; }
-.slides-track { display:flex; transition:0.4s; }
-.slides-arrow {
-  position:absolute; top:50%; transform:translateY(-50%);
-  background:black; color:white; border:none; padding:8px; cursor:pointer;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#0d0d0d;
+  --paper:#fafaf8;
+  --accent:#c0392b;
+  --muted:#6b6b6b;
+  --border:#e4e4e0;
+  --card:#ffffff;
+  --warm:#f5f3ee;
 }
-.prev { left:10px; }
-.next { right:10px; }
+body{font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);font-size:15px;line-height:1.6;overflow-x:hidden;}
 
-.card-content { padding:20px; }
+@media print{
+  nav,.no-print{display:none!important;}
+  body{font-size:11px;}
+  .hero{padding:2rem!important;}
+  .post-card{page-break-inside:avoid;margin-bottom:1.5rem!important;}
+  .slide-img{max-height:180px!important;}
+  a{color:var(--ink)!important;}
+  .btn{border:1px solid #999!important;background:transparent!important;color:#000!important;}
+  .summary-section{page-break-inside:avoid;}
+}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:var(--ink);color:#fff;
+  padding:1rem 5%;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:0.02em;}
+.nav-links{display:flex;gap:2rem;}
+.nav-links a{color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;transition:color 0.2s;}
+.nav-links a:hover{color:#fff;}
+
+/* HERO */
+.hero{
+  background:var(--ink);color:#fff;
+  padding:6rem 5% 5rem;
+  display:grid;grid-template-columns:1.2fr 1fr;gap:6rem;align-items:center;
+}
+.hero-eyebrow{
+  font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:#c0392b;margin-bottom:1.2rem;
+  display:flex;align-items:center;gap:0.75rem;
+}
+.hero-eyebrow::after{content:'';flex:1;height:1px;background:#c0392b;max-width:40px;}
+.hero-h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(3rem,5.5vw,5rem);
+  line-height:1.02;letter-spacing:-0.02em;margin-bottom:1.5rem;
+  font-weight:600;
+}
+.hero-h1 em{font-style:italic;color:#e8a090;}
+.hero-bio{color:rgba(255,255,255,0.55);font-size:0.95rem;font-weight:300;line-height:1.8;max-width:480px;}
+.hero-stats{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1px;border:1px solid rgba(255,255,255,0.08);
+  background:rgba(255,255,255,0.08);
+}
+.stat{padding:1.75rem 1.5rem;background:var(--ink);}
+.stat-n{font-family:'Cormorant Garamond',serif;font-size:2.5rem;line-height:1;font-weight:600;}
+.stat-l{font-size:0.68rem;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.35);margin-top:0.3rem;}
+
+/* SECTION INTRO */
+.section-intro{padding:5rem 5% 2rem;}
+.s-tag{font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:0.75rem;display:flex;align-items:center;gap:0.75rem;}
+.s-tag::after{content:'';width:32px;height:1px;background:var(--accent);}
+.s-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);letter-spacing:-0.02em;line-height:1.1;font-weight:600;}
+.s-sub{color:var(--muted);font-size:0.92rem;font-weight:300;margin-top:0.75rem;max-width:500px;line-height:1.7;}
+
+/* POST CARDS */
+.posts-wrap{padding:1rem 5% 5rem;}
+.post-card{
+  display:grid;grid-template-columns:1fr 1fr;
+  border:1px solid var(--border);
+  background:var(--card);
+  margin-bottom:2.5rem;
+  overflow:hidden;
+}
+
+/* SLIDES - LEFT PANEL */
+.slides-panel{
+  background:var(--warm);
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+}
+.slides-track{
+  display:flex;
+  transition:transform 0.4s ease;
+  height:100%;
+}
+.slide-img{
+  min-width:100%;height:360px;
+  object-fit:cover;
+  cursor:pointer;
+}
+.slides-nav{
+  position:absolute;bottom:0;left:0;right:0;
+  display:flex;justify-content:center;align-items:center;gap:0.5rem;
+  padding:0.75rem;
+  background:linear-gradient(transparent, rgba(0,0,0,0.3));
+}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.5);cursor:pointer;transition:background 0.2s;border:none;padding:0;}
+.dot.active{background:#fff;}
+.slides-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);
+  background:rgba(0,0,0,0.35);color:#fff;border:none;
+  width:32px;height:32px;border-radius:50%;cursor:pointer;
+  font-size:0.9rem;display:flex;align-items:center;justify-content:center;
+  transition:background 0.2s;z-index:2;
+}
+.slides-arrow:hover{background:rgba(0,0,0,0.6);}
+.slides-arrow.prev{left:10px;}
+.slides-arrow.next{right:10px;}
+
+/* CONTENT - RIGHT PANEL */
+.card-content{
+  padding:2.5rem;display:flex;flex-direction:column;justify-content:space-between;
+}
+.card-top{}
+.card-meta{display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+.brand-tag{
+  font-size:0.62rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;
+  padding:0.25rem 0.7rem;border:1.5px solid var(--ink);color:var(--ink);
+}
+.month-tag{font-size:0.7rem;color:var(--muted);letter-spacing:0.04em;}
+.card-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.75rem;line-height:1.15;letter-spacing:-0.01em;
+  font-weight:600;margin-bottom:0.75rem;
+}
+.card-desc{font-size:0.875rem;color:var(--muted);line-height:1.78;font-weight:300;margin-bottom:1.5rem;}
+
+/* STATS ROW */
+.stats-row{
+  display:flex;gap:0;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  margin-bottom:1.5rem;
+}
+.stat-item{flex:1;padding:0.9rem 0.75rem;border-right:1px solid var(--border);}
+.stat-item:last-child{border-right:none;}
+.si-n{font-family:'Cormorant Garamond',serif;font-size:1.4rem;line-height:1;font-weight:600;}
+.si-l{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-top:0.2rem;}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:0.65rem;flex-wrap:wrap;}
+.btn{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  font-family:'Inter',sans-serif;
+  font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;
+  text-decoration:none;padding:0.6rem 1.1rem;
+  border:1.5px solid;transition:all 0.2s;cursor:pointer;
+}
+.btn-dark{border-color:var(--ink);color:var(--ink);}
+.btn-dark:hover{background:var(--ink);color:#fff;}
+.btn-red{border-color:var(--accent);color:var(--accent);}
+.btn-red:hover{background:var(--accent);color:#fff;}
+
+/* VIBE CODING CARD */
+.vibe-card{
+  border:1px solid var(--border);
+  background:var(--card);
+  margin-bottom:2.5rem;
+  overflow:hidden;
+}
+.vibe-inner{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+
+/* SUMMARY */
+.summary-section{
+  background:var(--ink);color:#fff;
+  padding:5rem 5%;
+}
+.sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;margin-top:3rem;}
+.sum-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,3.5vw,3rem);letter-spacing:-0.02em;line-height:1.1;font-weight:600;}
+.sum-text{color:rgba(255,255,255,0.55);font-size:0.9rem;font-weight:300;line-height:1.85;}
+.sum-text p+p{margin-top:1rem;}
+.highlights{display:flex;flex-direction:column;gap:1px;background:rgba(255,255,255,0.06);}
+.hl{padding:1.25rem 1.5rem;background:var(--ink);display:flex;gap:1rem;align-items:flex-start;}
+.hl-icon{font-size:1.1rem;flex-shrink:0;margin-top:0.1rem;}
+.hl strong{display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.2rem;}
+.hl span{font-size:0.8rem;color:rgba(255,255,255,0.45);}
+
+/* FOOTER */
+footer{
+  padding:2rem 5%;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.footer-name{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;}
+.footer-links{display:flex;gap:1.5rem;}
+.footer-links a{color:var(--muted);text-decoration:none;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;transition:color 0.2s;}
+.footer-links a:hover{color:var(--accent);}
+
+/* HR */
+hr{border:none;border-top:1px solid var(--border);}
+
+@media(max-width:768px){
+  nav{padding:1rem;}
+  .nav-links{display:none;}
+  .hero{grid-template-columns:1fr;padding:3rem 5%;gap:2.5rem;}
+  .post-card,.vibe-inner{grid-template-columns:1fr;}
+  .slide-img{height:280px;}
+  .sum-grid{grid-template-columns:1fr;gap:2.5rem;}
+  footer{flex-direction:column;gap:1rem;text-align:center;}
+}
 </style>
 </head>
-
 <body>
 
-<h1 style="padding:20px;">Priya Baheti — Portfolio</h1>
+<nav class="no-print">
+  <div class="nav-logo">Priya Baheti</div>
+  <div class="nav-links">
+    <a href="#posts">Posts</a>
+    <a href="#summary">About</a>
+    <a href="https://www.linkedin.com/in/priyabaheti/" target="_blank">LinkedIn ↗</a>
+  </div>
+</nav>
 
-<!-- ================= RAPIDO ================= -->
-<div class="post-card">
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow">Product Portfolio</div>
+    <h1 class="hero-h1">Product thinking<br><em>after 6 pm.</em></h1>
+    <p class="hero-bio">I spot friction in apps I use daily — and redesign the fix. Every post here starts with a real pain point, proposes a feature solution with user flows, and maps the business impact.</p>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-n">1,50,000+</div><div class="stat-l">Total Impressions</div></div>
+    <div class="stat"><div class="stat-n">13+</div><div class="stat-l">Products Analysed</div></div>
+    <div class="stat"><div class="stat-n">2</div><div class="stat-l">Live Prototypes</div></div>
+    <div class="stat"><div class="stat-n">1</div><div class="stat-l">Live Website Built</div></div>
+  </div>
+</section>
+
+<div class="section-intro" id="posts">
+  <div class="s-tag">Feature Concepts</div>
+  <h2 class="s-h2">Product thinking, applied.</h2>
+  <p class="s-sub">Each post identifies a real friction point, proposes a feature with mockups, and maps the business impact.</p>
+</div>
+
+<div class="posts-wrap">
+
+<!-- ═══ 1. RAPIDO ═══ -->
+<div class="post-card" id="rapido">
   <div class="slides-panel">
     <div class="slides-track" id="sl-rapido">
-
-      <img class="slide-img" src="images/10.png">
-      <img class="slide-img" src="images/rapido/2.png">
-      <img class="slide-img" src="images/rapido/3.png">
-
+      <div class="slide active">
+        <img src="https://via.placeholder.com/600x400" alt="Rapido Smart Commute Scheduler">
+      </div>
+      <div class="slide">
+        <img src="https://via.placeholder.com/600x400" alt="Rapido Smart Commute Scheduler">
+      </div>
+      <div class="slide">
+        <img src="https://via.placeholder.com/600x400" alt="Rapido Smart Commute Scheduler">
+      </div>
     </div>
-
-    <button class="slides-arrow prev" onclick="moveSlide('rapido', -1)">‹</button>
-    <button class="slides-arrow next" onclick="moveSlide('rapido', 1)">›</button>
+    <button class="slides-arrow prev" onclick="slide('rapido',-1)">‹</button>
+    <button class="slides-arrow next" onclick="slide('rapido',1)">›</button>
+    <div class="slides-nav" id="dots-rapido">
+      <button class="dot active" onclick="goSlide('rapido',0)"></button>
+      <button class="dot" onclick="goSlide('rapido',1)"></button>
+      <button class="dot" onclick="goSlide('rapido',2)"></button>
+    </div>
   </div>
-
   <div class="card-content">
-    <h2>Rapido</h2>
-    <p>Reducing ride cancellations with smarter driver matching.</p>
+    <div class="card-top">
+      <div class="card-meta"><span class="brand-tag">Rapido</span><span class="month-tag">1 year ago</span></div>
+      <h3 class="card-title">Smart Commute Scheduler</h3>
+      <p class="card-desc">Riders repeat the same route daily yet schedule manually every time. Proposed a commute routine — app learns your pattern, nudges you at the right time, pre-fills everything. Included full two-requirement user flow, profile-level schedule settings, and business analysis: stronger demand forecasting, higher retention, greater loyalty.</p>
+    </div>
+    <div>
+      <div class="stats-row">
+        <div class="stat-item"><div class="si-n">1,09,207</div><div class="si-l">Impressions</div></div>
+        <div class="stat-item"><div class="si-n">425</div><div class="si-l">Likes</div></div>
+        <div class="stat-item"><div class="si-n">39</div><div class="si-l">Comments</div></div>
+      </div>
+      <div class="btn-row">
+        <a href="https://www.linkedin.com/in/priyabaheti/" target="_blank" class="btn btn-dark">LinkedIn Post ↗</a>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- ================= SWIGGY ================= -->
-<div class="post-card">
+<!-- ═══ 2. BIGBASKET ═══ -->
+<div class="post-card" id="bigbasket">
   <div class="slides-panel">
-    <div class="slides-track" id="sl-swiggy">
-
-      <img class="slide-img" src="images/swiggy/1.png">
-      <img class="slide-img" src="images/swiggy/2.png">
-      <img class="slide-img" src="images/swiggy/3.png">
-
+    <div class="slides-track" id="sl-bigbasket">
+    
     </div>
-
-    <button class="slides-arrow prev" onclick="moveSlide('swiggy', -1)">‹</button>
-    <button class="slides-arrow next" onclick="moveSlide('swiggy', 1)">›</button>
   </div>
-
   <div class="card-content">
-    <h2>Swiggy</h2>
-    <p>Improving food discovery and reducing decision fatigue.</p>
+    <div class="card-top">
+      <div class="card-meta"><span class="brand-tag">BigBasket</span><span class="month-tag">1 year ago</span></div>
+      <h3 class="card-title">Ripeness Selector</h3>
+      <p class="card-desc">8-minute delivery is fast — but sometimes too fast to enjoy your produce. Proposed a "Ready to Eat / Needs Ripening" toggle on each item at checkout, so users get their avocados exactly when they want them. Simple UX change with clear satisfaction and repeat-order impact.</p>
+    </div>
+    <div>
+      <div class="stats-row">
+        <div class="stat-item"><div class="si-n">22,319</div><div class="si-l">Impressions</div></div>
+        <div class="stat-item"><div class="si-n">250</div><div class="si-l">Likes</div></div>
+        <div class="stat-item"><div class="si-n">22</div><div class="si-l">Comments</div></div>
+      </div>
+      <div class="btn-row">
+        <a href="https://www.linkedin.com/in/priyabaheti/" target="_blank" class="btn btn-dark">LinkedIn Post ↗</a>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- ================= ZOMATO ================= -->
-<div class="post-card">
+<!-- ═══ 3. CRED ═══ -->
+<div class="post-card" id="cred">
+  <div class="slides-panel">
+    <div class="slides-track" id="sl-cred">
+      
+    </div>
+    <button class="slides-arrow prev" onclick="slide('cred',-1)">‹</button>
+    <button class="slides-arrow next" onclick="slide('cred',1)">›</button>
+    <div class="slides-nav" id="dots-cred">
+      <button class="dot active" onclick="goSlide('cred',0)"></button>
+      <button class="dot" onclick="goSlide('cred',1)"></button>
+      <button class="dot" onclick="goSlide('cred',2)"></button>
+    </div>
+  </div>
+  <div class="card-content">
+    <div class="card-top">
+      <div class="card-meta"><span class="brand-tag">CRED</span><span class="month-tag">1 year ago</span></div>
+      <h3 class="card-title">Expense Tagging & Category Tracker</h3>
+      <p class="card-desc">CRED users transact daily but have no way to understand where money goes. Proposed three layered requirements: tag expenses by category (Daily Fixed, Monthly Fixed, Occasional, Unexpected), colour-coded history view, and period-based category totals — all within the existing CRED Pay flow.</p>
+    </div>
+    <div>
+      <div class="stats-row">
+        <div class="stat-item"><div class="si-n">12,481</div><div class="si-l">Impressions</div></div>
+        <div class="stat-item"><div class="si-n">119</div><div class="si-l">Likes</div></div>
+        <div class="stat-item"><div class="si-n">17</div><div class="si-l">Comments</div></div>
+      </div>
+      <div class="btn-row">
+        <a href="https://www.linkedin.com/in/priyabaheti/" target="_blank" class="btn btn-dark">LinkedIn Post ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 4. BLUE DART ═══ -->
+<div class="post-card" id="bluedart">
+  <div class="slides-panel">
+    <div class="slides-track" id="sl-bluedart">
+    </div>
+  </div>
+  <div class="card-content">
+    <div class="card-top">
+      <div class="card-meta"><span class="brand-tag">Blue Dart</span><span class="month-tag">1 year ago</span></div>
+      <h3 class="card-title">Proactive OTP — Valid for a Day</h3>
+      <p class="card-desc">Blue Dart's OTP arrives when the courier does, valid only 30 minutes. Proposed sending it at dispatch (morning), valid all day — giving recipients time to delegate or prepare. Reduces courier wait time, failed deliveries, and recipient anxiety. Saves time and effort for everyone.</p>
+    </div>
+    <div>
+      <div class="stats-row">
+        <div class="stat-item"><div class="si-n">6,795</div><div class="si-l">Impressions</div></div>
+        <div class="stat-item"><div class="si-n">59</div><div class="si-l">Likes</div></div>
+        <div class="stat-item"><div class="si-n">14</div><div class="si-l">Comments</div></div>
+      </div>
+      <div class="btn-row">
+        <a href="https://www.linkedin.com/in/priyabaheti/" target="_blank" class="btn btn-dark">LinkedIn Post ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 5. ZOMATO / BLINKIT ═══ -->
+<div class="post-card" id="zomato">
   <div class="slides-panel">
     <div class="slides-track" id="sl-zomato">
-
-      <img class="slide-img" src="images/zomato/1.png">
-      <img class="slide-img" src="images/zomato/2.png">
-      <img class="slide-img" src="images/zomato/3.png">
-
     </div>
-
-    <button class="slides-arrow prev" onclick="moveSlide('zomato', -1)">‹</button>
-    <button class="slides-arrow next" onclick="moveSlide('zomato', 1)">›</button>
+    <button class="slides-arrow prev" onclick="slide('zomato',-1)">‹</button>
+    <button class="slides-arrow next" onclick="slide('zomato',1)">›</button>
+    <div class="slides-nav" id="dots-zomato">
+      <button class="dot active" onclick="goSlide('zomato',0)"></button>
+      <button class="dot" onclick="goSlide('zomato',1)"></button>
+      <button class="dot" onclick="goSlide('zomato',2)"></button>
+    </div>
   </div>
-
   <div class="card-content">
-    <h2>Zomato</h2>
-    <p>Enhancing restaurant selection with better filters.</p>
+    <div class="card-top">
+      <div class="card-meta"><span class="brand-tag">Zomato / Blinkit</span><span class="month-tag">1 year ago</span></div>
+      <h3 class="card-title">Near-Expiry Flash Deals — "Too Good to Throw"</h3>
+      <p class="card-desc">India wastes 11.9M tonnes of restaurant food yearly. Proposed a dedicated "Too Good to Throw" tab in Zomato's Explore section and a featured slot in Blinkit — near-expiry items at steep discounts. Included full wins/hurdles/fixes analysis across platform, restaurant, and customer.</p>
+    </div>
+    <div>
+      <div class="stats-row">
+        <div class="stat-item"><div class="si-n">6,682</div><div class="si-l">Impressions</div></div>
+        <div class="stat-item"><div class="si-n">69</div><div class="si-l">Likes</div></div>
+        <div class="stat-item"><div class="si-n">13</div><div class="si-l">Comments</div></div>
+      </div>
+      <div class="btn-row">
+        <a href="https://www.linkedin.com/in/priyabaheti/" target="_blank" class="btn btn-dark">LinkedIn Post ↗</a>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- ================= SCRIPT ================= -->
+<!-- ═══ 6. YULU ═══ -->
+<div class="post-card" id="yulu">
+  <div class="slides-panel">
+    <div class="slides-track" id="sl-yulu">
+    </div>
+  </div>
+  <div class="card-content">
+    <div class="card-top">
+      <div class="card-meta"><span class="brand-tag">Yulu</span><span class="month-tag">1 year ago</span></div>
+      <h3 class="card-title">Indicators on EV Bikes</h3>
+      <p class="card-desc">9 out of 10 Yulu riders felt turn indicators were missing for safer navigation. Without signals, other road users can't tell where a slow-moving Yulu is heading — a real safety gap surfaced through direct user research conversations.</p>
+    </div>
+    <div>
+      <div class="stats-row">
+        <div class="stat-item"><div class="si-n">4,016</div><div class="si-l">Impressions</div></div>
+        <div class="stat-item"><div class="si-n">49</div><div class="si-l">Likes</div></div>
+        <div class="stat-item"><div class="si-n">6</div><div class="si-l">Comments</div></div>
+      </div>
+      <div class="btn-row">
+        <a href="https://www.linkedin.com/in/priyabaheti/" target="_blank" class="btn btn-dark">LinkedIn Post ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 7. PEEKO ═══ -->
+<div class="post-card" id="peeko">
+  <div class="slides-panel">
+    <div class="slides-track" id="sl-peeko">
+    </div>
+  </div>
+  <div class="card-content">
+    <div class="card-top">
+      <div class="card-meta"><span class="brand-tag">Peeko</span><span class="month-tag">3 days ago</span></div>
+      <h3 class="card-title">Age-Sync Gift Mode</h3>
+      <p class="card-desc">Parents know the baby catalog. Gifters only know the baby's age. One tap into Gift Mode — enter the age — and the entire catalog reshapes to show only age-appropriate products. No irrelevant clutter, no decision paralysis. Built a full interactive prototype.</p>
+    </div>
+    <div>
+      <div class="stats-row">
+        <div class="stat-item"><div class="si-n">510</div><div class="si-l">Impressions</div></div>
+        <div class="stat-item"><div class="si-n">9</div><div class="si-l">Likes</div></div>
+      </div>
+      <div class="btn-row">
+        <a href="https://lnkd.in/gxgUGidB" target="_blank" class="btn btn-red">Live Prototype ↗</a>
+        <a href="https://www.linkedin.com/in/priyabaheti/" target="_blank" class="btn btn-dark">LinkedIn Post ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 8. ZUDIO ═══ -->
+<div class="post-card" id="zudio">
+  <div class="slides-panel">
+    <div class="slides-track" id="sl-zudio">
+    </div>
+  </div>
+  <div class="card-content">
+    <div class="card-top">
+      <div class="card-meta"><span class="brand-tag">Zudio / Westside</span><span class="month-tag">1 year ago</span></div>
+      <h3 class="card-title">Size-Coded Hanger System</h3>
+      <p class="card-desc">An in-store retail experience suggestion — shoppers spend too long hunting for their size, inadvertently creating floor chaos. Colour-coded hangers by size: zero-tech, instant impact for shoppers (faster find), staff (easier restocking), and the brand (higher satisfaction, more purchases).</p>
+    </div>
+    <div>
+      <div class="stats-row">
+        <div class="stat-item"><div class="si-n">4,995</div><div class="si-l">Impressions</div></div>
+        <div class="stat-item"><div class="si-n">52</div><div class="si-l">Likes</div></div>
+        <div class="stat-item"><div class="si-n">12</div><div class="si-l">Comments</div></div>
+      </div>
+      <div class="btn-row">
+        <a href="https://www.linkedin.com/in/priyabaheti/" target="_blank" class="btn btn-dark">LinkedIn Post ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 9. AIRBNB ═══ -->
+<div class="post-card" id="airbnb">
+  <div class="slides-panel">
+    <div class="slides-track" id="sl-airbnb">
+    </div>
+    <button class="slides-arrow prev" onclick="slide('airbnb',-1)">‹</button>
+    <button class="slides-arrow next" onclick="slide('airbnb',1)">›</button>
+    <div class="slides-nav" id="dots-airbnb">
+      <button class="dot active" onclick="goSlide('airbnb',0)"></button>
+      <button class="dot" onclick="goSlide('airbnb',1)"></button>
+      <button class="dot" onclick="goSlide('airbnb',2)"></button>
+    </div>
+  </div>
+  <div class="card-content">
+    <div class="card-top">
+      <div class="card-meta"><span class="brand-tag">Airbnb</span><span class="month-tag">1 month ago</span></div>
+      <h3 class="card-title">Final Call — Group Decision Engine</h3>
+      <p class="card-desc">Wishlists collect options; 389 WhatsApp messages make the actual decision. Designed ranked voting inside Wishlists — friends mark Top 3, a weighted system surfaces a Winner's Circle. Impact: 47% of Airbnb bookings are group trips. Targets Wishlist → Booking conversion with zero-cost viral acquisition of 4–6 new users per trip.</p>
+    </div>
+    <div>
+      <div class="stats-row">
+        <div class="stat-item"><div class="si-n">1,004</div><div class="si-l">Impressions</div></div>
+        <div class="stat-item"><div class="si-n">20</div><div class="si-l">Likes</div></div>
+        <div class="stat-item"><div class="si-n">1</div><div class="si-l">Comment</div></div>
+      </div>
+      <div class="btn-row">
+        <a href="https://lnkd.in/gXREuTxT" target="_blank" class="btn btn-red">Live Prototype ↗</a>
+        <a href="https://www.linkedin.com/in/priyabaheti/" target="_blank" class="btn btn-dark">LinkedIn Post ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 10. UBER ═══ -->
+<div class="post-card" id="uber">
+  <div class="slides-panel">
+    <div class="slides-track" id="sl-uber">
+    </div>
+  </div>
+  <div class="card-content">
+    <div class="card-top">
+      <div class="card-meta"><span class="brand-tag">Uber</span><span class="month-tag">5 months ago</span></div>
+      <h3 class="card-title">Pickup Confidence Meter</h3>
+      <p class="card-desc">Pre-booked Uber rides still leave users anxious — will the driver actually show up? Proposed a Pickup Reliability indicator using 6 real-time parameters: active drivers nearby, cancellation rate, historical availability, demand-to-supply ratio, lead time, and driver acceptance rate. Transparency builds trust.</p>
+    </div>
+    <div>
+      <div class="stats-row">
+        <div class="stat-item"><div class="si-n">2,797</div><div class="si-l">Impressions</div></div>
+        <div class="stat-item"><div class="si-n">33</div><div class="si-l">Likes</div></div>
+        <div class="stat-item"><div class="si-n">1</div><div class="si-l">Comment</div></div>
+      </div>
+      <div class="btn-row">
+        <a href="https://www.linkedin.com/in/priyabaheti/" target="_blank" class="btn btn-dark">LinkedIn Post ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 11. RAZORPAY ═══ -->
+<div class="post-card" id="razorpay">
+  <div class="slides-panel">
+    <div class="slides-track" id="sl-razorpay">
+    </div>
+    <button class="slides-arrow prev" onclick="slide('razorpay',-1)">‹</button>
+    <button class="slides-arrow next" onclick="slide('razorpay',1)">›</button>
+    <div class="slides-nav" id="dots-razorpay">
+      <button class="dot active" onclick="goSlide('razorpay',0)"></button>
+      <button class="dot" onclick="goSlide('razorpay',1)"></button>
+    </div>
+  </div>
+  <div class="card-content">
+    <div class="card-top">
+      <div class="card-meta"><span class="brand-tag">Razorpay</span><span class="month-tag">9 months ago</span></div>
+      <h3 class="card-title">Bill Split at Checkout</h3>
+      <p class="card-desc">The post-meal "who pays?" moment solved at the source. Let users split the bill at Razorpay-powered checkout — Pay Total, Split Equally, or Custom Split. Three-sided value: Zomato gets higher conversions, users avoid awkward follow-ups, Razorpay gains micro-transactions. "This isn't just a feature. It's a funnel."</p>
+    </div>
+    <div>
+      <div class="stats-row">
+        <div class="stat-item"><div class="si-n">1,888</div><div class="si-l">Impressions</div></div>
+        <div class="stat-item"><div class="si-n">33</div><div class="si-l">Likes</div></div>
+      </div>
+      <div class="btn-row">
+        <a href="https://www.linkedin.com/in/priyabaheti/" target="_blank" class="btn btn-dark">LinkedIn Post ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 12. GOOGLE MAPS ═══ -->
+<div class="post-card" id="gmaps">
+  <div class="slides-panel">
+    <div class="slides-track" id="sl-gmaps">
+    </div>
+  </div>
+  <div class="card-content">
+    <div class="card-top">
+      <div class="card-meta"><span class="brand-tag">Google Maps</span><span class="month-tag">2 months ago</span></div>
+      <h3 class="card-title">Personal Safe Route Avoidance</h3>
+      <p class="card-desc">As a woman riding a two-wheeler at night, one uncomfortable stretch changes everything. Proposed a private "Avoid this road for me in future" option — only applied to your routes, not shared. Quietly personal today, potentially impactful for all women travellers at scale — similar to how construction alerts already work.</p>
+    </div>
+    <div>
+      <div class="stats-row">
+        <div class="stat-item"><div class="si-n">1,144</div><div class="si-l">Impressions</div></div>
+        <div class="stat-item"><div class="si-n">22</div><div class="si-l">Likes</div></div>
+        <div class="stat-item"><div class="si-n">6</div><div class="si-l">Comments</div></div>
+      </div>
+      <div class="btn-row">
+        <a href="https://www.linkedin.com/in/priyabaheti/" target="_blank" class="btn btn-dark">LinkedIn Post ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 13. SPLITWISE ═══ -->
+<div class="post-card" id="splitwise">
+  <div class="slides-panel">
+    <div class="slides-track" id="sl-splitwise">
+    </div>
+  </div>
+  <div class="card-content">
+    <div class="card-top">
+      <div class="card-meta"><span class="brand-tag">Splitwise</span><span class="month-tag">2 months ago</span></div>
+      <h3 class="card-title">Personal Expense Lane</h3>
+      <p class="card-desc">Tracking solo expenses in Splitwise currently requires creating a private group with yourself — a workaround that feels like a hack. Proposed a built-in Personal Expense Tracker lane in the main grid: no "group of one", just simple personal tracking living naturally alongside shared bills.</p>
+    </div>
+    <div>
+      <div class="stats-row">
+        <div class="stat-item"><div class="si-n">1,226</div><div class="si-l">Impressions</div></div>
+        <div class="stat-item"><div class="si-n">21</div><div class="si-l">Likes</div></div>
+        <div class="stat-item"><div class="si-n">1</div><div class="si-l">Comment</div></div>
+      </div>
+      <div class="btn-row">
+        <a href="https://www.linkedin.com/in/priyabaheti/" target="_blank" class="btn btn-dark">LinkedIn Post ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 14. OFFLYN ═══ -->
+<div class="post-card" id="offlyn">
+  <div class="slides-panel">
+    <div class="slides-track" id="sl-offlyn">
+    </div>
+  </div>
+  <div class="card-content">
+    <div class="card-top">
+      <div class="card-meta"><span class="brand-tag">Offlyn</span><span class="month-tag">Recent</span></div>
+      <h3 class="card-title">Booking Closing Date & Time</h3>
+      <p class="card-desc">Experience hosts on Offlyn need to plan ahead — but the app doesn't let them set a booking deadline. Proposed adding a booking closing date and time to every experience listing, giving hosts predictability for preparation and nudging attendees to commit before it's too late.</p>
+    </div>
+    <div>
+      <div class="stats-row">
+        <div class="stat-item"><div class="si-n">—</div><div class="si-l">Impressions</div></div>
+        <div class="stat-item"><div class="si-n">—</div><div class="si-l">Likes</div></div>
+      </div>
+      <div class="btn-row">
+        <a href="https://www.linkedin.com/in/priyabaheti/" target="_blank" class="btn btn-dark">LinkedIn Post ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ VIBE CODING ═══ -->
+<div class="vibe-card" id="vibe">
+  <div class="vibe-inner">
+    <div class="slides-panel">
+      <div class="slides-track" id="sl-vibe">
+      </div>
+    </div>
+    <div class="card-content" style="background:#0d0d0d;color:#fff;">
+      <div class="card-top">
+        <div class="card-meta">
+          <span class="brand-tag" style="border-color:#fff;color:#fff;">Side Project</span>
+          <span class="month-tag" style="color:rgba(255,255,255,0.4);">1 month ago</span>
+        </div>
+        <h3 class="card-title" style="color:#fff;">Built frenchhalwai.com — Free, with Google Sheets as Backend</h3>
+        <p class="card-desc" style="color:rgba(255,255,255,0.55);">Vibe-coded a full e-commerce website for a local artisanal patisserie — completely free of cost, with Google Sheets acting as the product database backend. Proved that knowing the basics makes AI-assisted coding 10x faster. The site is live at frenchhalwai.com.</p>
+      </div>
+      <div>
+        <div class="stats-row" style="border-color:rgba(255,255,255,0.1);">
+          <div class="stat-item" style="border-color:rgba(255,255,255,0.1);">
+            <div class="si-n" style="color:#fff;">18</div><div class="si-l" style="color:rgba(255,255,255,0.35);">Likes</div>
+          </div>
+          <div class="stat-item" style="border-color:rgba(255,255,255,0.1);">
+            <div class="si-n" style="color:#fff;">965</div><div class="si-l" style="color:rgba(255,255,255,0.35);">Impressions</div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <a href="https://frenchhalwai.com" target="_blank" class="btn" style="border-color:#fff;color:#fff;">Visit Site ↗</a>
+          <a href="https://www.linkedin.com/in/priyabaheti/" target="_blank" class="btn" style="border-color:rgba(255,255,255,0.4);color:rgba(255,255,255,0.6);">LinkedIn Post ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end posts-wrap -->
+
+<!-- SUMMARY -->
+<section class="summary-section" id="summary">
+  <div class="s-tag" style="color:#c0392b;">Professional Background</div>
+  <h2 class="sum-title" style="color:#fff;">The day job that<br><em style="font-style:italic;color:#e8a090;">sharpens the instinct.</em></h2>
+  <div class="sum-grid">
+    <div class="sum-text">
+      <p>I'm Priya Baheti — a product professional with a background in B2B SaaS and Fintech, actively transitioning into D2C and consumer apps.</p>
+      <p>At Kinara Capital, I owned onboarding end-to-end: redesigning flows that cut drop-offs by 50% and compressing turnaround time from 7 days to 1. That rigour — identify friction, design the fix, measure impact — is the same lens I bring to every post I publish.</p>
+      <p>I'm an immediate joiner, fully aligned to Australian Business Hours, and based in Bengaluru.</p>
+    </div>
+    <div class="highlights">
+      <div class="hl"><div class="hl-icon">📉</div><div><strong>50% reduction in onboarding drop-offs</strong><span>Redesigned end-to-end onboarding at Kinara Capital (B2B Fintech)</span></div></div>
+      <div class="hl"><div class="hl-icon">⚡</div><div><strong>TAT reduced: 7 days → 1 day</strong><span>Product and process changes compressing loan onboarding turnaround</span></div></div>
+      <div class="hl"><div class="hl-icon">🛍️</div><div><strong>Transitioning into D2C & Retail</strong><span>13+ consumer brands analysed; grocery, fashion, mobility, logistics, travel</span></div></div>
+      <div class="hl"><div class="hl-icon">💻</div><div><strong>Builder, not just thinker</strong><span>Built a live e-commerce site (frenchhalwai.com) free, with Google Sheets backend</span></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-name">Priya Baheti</div>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/in/priyabaheti/" target="_blank">LinkedIn</a>
+    <a href="#">Bengaluru</a>
+  </div>
+</footer>
+
 <script>
-let slideIndex = {
-  rapido: 0,
-  swiggy: 0,
-  zomato: 0
-};
-
-function moveSlide(id, direction) {
-  const track = document.getElementById("sl-" + id);
-  const slides = track.children;
-
-  slideIndex[id] += direction;
-
-  if (slideIndex[id] < 0) slideIndex[id] = slides.length - 1;
-  if (slideIndex[id] >= slides.length) slideIndex[id] = 0;
-
-  track.style.transform = "translateX(-" + (slideIndex[id] * 100) + "%)";
+const state = {};
+function slide(id, dir) {
+  const track = document.getElementById('sl-' + id);
+  const slides = track.querySelectorAll('.slide-img');
+  if (!state[id]) state[id] = 0;
+  state[id] = (state[id] + dir + slides.length) % slides.length;
+  track.style.transform = 'translateX(-' + (state[id] * 100) + '%)';
+  updateDots(id, slides.length);
+}
+function goSlide(id, idx) {
+  const track = document.getElementById('sl-' + id);
+  const slides = track.querySelectorAll('.slide-img');
+  state[id] = idx;
+  track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+  updateDots(id, slides.length);
+}
+function updateDots(id, total) {
+  const dotsEl = document.getElementById('dots-' + id);
+  if (!dotsEl) return;
+  dotsEl.querySelectorAll('.dot').forEach((d,i) => {
+    d.classList.toggle('active', i === state[id]);
+  });
 }
 </script>
-
 </body>
 </html>
