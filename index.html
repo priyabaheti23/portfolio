@@ -90,16 +90,20 @@ nav{
 /* SLIDES - LEFT PANEL */
 .slides-panel{
   background:var(--warm);
-  display:flex;flex-direction:column;
-  position:relative;overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+  overflow:hidden;
+  height:100%;          /* ADD THIS */
 }
 .slides-track{
   display:flex;
   transition:transform 0.4s ease;
-  height:100%;
+  height:100%;          /* CHANGE from auto */
 }
 .slide-img{
-  min-width:100%;height:360px;
+  min-width:100%;
+  height:100%;          /* CHANGE from 360px */
   object-fit:cover;
   cursor:pointer;
 }
