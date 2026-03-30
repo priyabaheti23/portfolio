@@ -79,32 +79,29 @@ nav{
 
 /* POST CARDS */
 .posts-wrap{padding:1rem 5% 5rem;}
-.post-card {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: stretch; /* Both sides stay equal height */
-  min-height: 450px;    /* Optional: sets a minimum baseline height */
+.post-card{
+  display:grid;grid-template-columns:1fr 1fr;
+  border:1px solid var(--border);
+  background:var(--card);
+  margin-bottom:2.5rem;
+  overflow:hidden;
 }
 
 /* SLIDES - LEFT PANEL */
-.slides-panel {
-  background: #1a1a1a; /* Using a dark background looks best for 'contain' mode */
-  display: flex;
-  align-items: center;  /* Centers image vertically if text is longer */
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
+.slides-panel{
+  background:var(--warm);
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
 }
-.slides-track {
-  display: flex;
-  height: 100%;
-  align-items: center; 
+.slides-track{
+  display:flex;
+  transition:transform 0.4s ease;
+  height:100%;
 }
-.slide-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain; /* This ensures the WHOLE image is visible, no matter what */
-  background: #1a1a1a; /* Matches the panel background */
+.slide-img{
+  min-width:100%;height:360px;
+  object-fit:cover;
+  cursor:pointer;
 }
 .slides-nav{
   position:absolute;bottom:0;left:0;right:0;
@@ -121,7 +118,7 @@ nav{
   font-size:0.9rem;display:flex;align-items:center;justify-content:center;
   transition:background 0.2s;z-index:2;
 }
-.s-arrow:hover{background:rgba(0,0,0,0.6);}
+.slides-arrow:hover{background:rgba(0,0,0,0.6);}
 .slides-arrow.prev{left:10px;}
 .slides-arrow.next{right:10px;}
 
